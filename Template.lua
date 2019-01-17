@@ -43,13 +43,35 @@ function user_unload()
 end
 
 function init_gear_sets()
+--[[
+{
+	main="",
+	sub="",
+	ranged="",
+	ammo="",
+	head="",
+	neck="",
+	ear1="",
+	ear2="",
+	body="",
+	hands="",
+	ring1="",
+	ring2="",
+	back="",
+	waist="",
+	legs="",
+	feet=""
+}
+]]--
 	
 	--------------------------------------
 	-- Precast sets
 	--------------------------------------
 	
 	-- Sets to apply to arbitrary JAs
-	sets.precast.JA['No Foot Rise'] = {body="Etoile Casaque +2"}
+	sets.precast.JA['No Foot Rise'] = {
+		body="Etoile Casaque +2"
+	}
 	
 	-- Sets to apply to any actions of spell.type
 	sets.precast.Waltz = {}
@@ -58,16 +80,21 @@ function init_gear_sets()
 	sets.precast.Waltz['Healing Waltz'] = {}
 
     -- Sets for fast cast gear for spells
-	sets.precast.FC = {ear2="Loquacious Earring"}
+	sets.precast.FC = {
+		ear2="Loquacious Earring"
+	}
 
     -- Fast cast gear for specific spells or spell maps
-	sets.precast.FC.Utsusemi = set_combine(sets.precast.FC, {neck="Magoraga Beads"})
+	sets.precast.FC.Utsusemi = set_combine(sets.precast.FC, {
+		neck="Magoraga Beads"
+	})
 
 	-- Weaponskill sets
 	sets.precast.WS = {}
 
 	-- Specific weaponskill sets.
-	sets.precast.WS['Exenterator'] = set_combine(sets.precast.WS, {})
+	sets.precast.WS['Exenterator'] = set_combine(sets.precast.WS, {
+	})
 
 	
 	--------------------------------------
@@ -86,22 +113,50 @@ function init_gear_sets()
 	--------------------------------------
 	
 	-- Resting sets
-	sets.resting = {head="Ocelomeh Headpiece +1",neck="Wiglen Gorget",
-		ring1="Sheltered Ring",ring2="Paguroidea Ring"}
+	sets.resting = {
+		head="Ocelomeh Headpiece +1",
+		neck="Wiglen Gorget",
+		ring1="Sheltered Ring",
+		ring2="Paguroidea Ring"
+	}
 	
 
 	-- Idle sets
 	sets.idle = {}
 
-	sets.idle.Town = {main="Izhiikoh", sub="Atoyac",ammo="Charis Feather",
-		head="Whirlpool Mask",neck="Charis Necklace",ear1="Dudgeon Earring",ear2="Heartseeker Earring",
-		body="Charis Casaque +2",hands="Iuitl Wristbands",ring1="Sheltered Ring",ring2="Paguroidea Ring",
-		back="Atheling Mantle",waist="Patentia Sash",legs="Kaabnax Trousers",feet="Skadi's Jambeaux +1"}
+	sets.idle.Town = {
+		main="Izhiikoh",
+		sub="Atoyac",
+		ammo="Charis Feather",
+		head="Whirlpool Mask",
+		neck="Charis Necklace",
+		ear1="Dudgeon Earring",
+		ear2="Heartseeker Earring",
+		body="Charis Casaque +2",
+		hands="Iuitl Wristbands",
+		ring1="Sheltered Ring",
+		ring2="Paguroidea Ring",
+		back="Atheling Mantle",
+		waist="Patentia Sash",
+		legs="Kaabnax Trousers",
+		feet="Skadi's Jambeaux +1"
+	}
 	
-	sets.idle.Weak = {ammo="Charis Feather",
-		head="Whirlpool Mask",neck="Wiglen Gorget",ear1="Dudgeon Earring",ear2="Heartseeker Earring",
-		body="Manibozho Jerkin",hands="Buremte Gloves",ring1="Sheltered Ring",ring2="Paguroidea Ring",
-		back="Iximulew Cape",waist="Flume Belt",legs="Kaabnax Trousers",feet="Skadi's Jambeaux +1"}
+	sets.idle.Weak = {
+		ammo="Charis Feather",
+		head="Whirlpool Mask",
+		neck="Wiglen Gorget",
+		ear1="Dudgeon Earring",
+		ear2="Heartseeker Earring",
+		body="Manibozho Jerkin",
+		hands="Buremte Gloves",
+		ring1="Sheltered Ring",
+		ring2="Paguroidea Ring",
+		back="Iximulew Cape",
+		waist="Flume Belt",
+		legs="Kaabnax Trousers",
+		feet="Skadi's Jambeaux +1"
+	}
 	
 	-- Defense sets
 	sets.defense.PDT = {}
@@ -109,7 +164,9 @@ function init_gear_sets()
 	sets.defense.MDT = {}
 
     -- Gear to wear for kiting
-	sets.Kiting = {feet="Skadi's Jambeaux +1"}
+	sets.Kiting = {
+		feet="Skadi's Jambeaux +1"
+	}
 
 	--------------------------------------
 	-- Engaged sets
@@ -128,8 +185,12 @@ function init_gear_sets()
 	-- Custom buff sets
 	--------------------------------------
 
-	sets.buff.Barrage = set_combine(sets.midcast.RA.Acc, {hands="Orion Bracers +1"})
-	sets.buff.Camouflage = {body="Orion Jerkin +1"}
+	sets.buff.Barrage = set_combine(sets.midcast.RA.Acc, {
+		hands="Orion Bracers +1"
+	})
+	sets.buff.Camouflage = {
+		body="Orion Jerkin +1"
+	}
 
 end
 
