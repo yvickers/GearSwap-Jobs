@@ -26,20 +26,36 @@ function user_setup()
 	state.OffenseMode:options('Normal')
 	state.RangedMode:options('Normal')
 	state.HybridMode:options('Normal')
+	state.Weapons = M{['description'] = 'Weapon Setup', 'Main'}
 	state.WeaponskillMode:options('Normal')
 	state.CastingMode:options('Normal')
 	state.IdleMode:options('Normal')
 	state.RestingMode:options('Normal')
 	state.PhysicalDefenseMode:options('PDT')
 	state.MagicalDefenseMode:options('MDT')
+	
+	state.CP = M(false, "Capacity Points Mode")
+	state.WeaponLock = M(false, 'Weapon Lock')
+	
+	-- Additional local binds
+--[[
+^   Ctrl
+!   Alt
+@   Win
+#   Apps
 
+--]]
+	send_command('bind @c gs c toggle CP')
+	send_command('bind @x gs c toggle WeaponLock')
+	
 	select_default_macro_book()
 end
 
 
 -- Called when this job file is unloaded (eg: job change)
 function user_unload()
-
+	send_command('unbind @c')
+	send_command('unbind @x')
 end
 
 function init_gear_sets()
@@ -63,6 +79,39 @@ function init_gear_sets()
 	feet=""
 }
 ]]--
+	
+	gear = {}
+	gear.artifact = {}
+	gear.artifact.head = ""
+	gear.artifact.body = ""
+	gear.artifact.hands = ""
+	gear.artifact.legs = ""
+	gear.artifact.feet = ""
+	
+	gear.relic = {}
+	gear.relic.head = ""
+	gear.relic.body = ""
+	gear.relic.hands = ""
+	gear.relic.legs = ""
+	gear.relic.feet = ""
+	
+	gear.empyrean = {}
+	gear.empyrean.head = ""
+	gear.empyrean.body = ""
+	gear.empyrean.hands = ""
+	gear.empyrean.legs = ""
+	gear.empyrean.feet = ""
+	
+	gear.weapons = {}
+	--match key to state.weapons options
+	gear.weapons['Main'] = {
+		main="",
+		sub=""
+	}
+	
+	gear.capes = {}
+	gear.capes.MeleeTP = {}
+	gear.capes.MeleeWS = {}
 	
 	--------------------------------------
 	-- Precast sets
@@ -314,6 +363,13 @@ end
 
 -- Modify the default idle set after it was constructed.
 function customize_idle_set(idleSet)
+    	if state.CP.current == 'on' then
+        	equip(sets.CP)
+        	disable('back')
+    	else
+        	enable('back')
+    	end
+
 	return idleSet
 end
 
