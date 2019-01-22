@@ -334,7 +334,24 @@ end
 
 -- Called when a generally-handled state value has been changed.
 function job_state_change(stateField, newValue, oldValue)
+	if state.WeaponLock.current == 'on' then
+		disable('main')
+		disable('sub')
+		disable('ranged')
+	else
+		enable('main')
+		enable('sub')
+		enable('ranged')
+	end
 
+	if state.CP.current == 'on' then
+        	equip(sets.CP)
+        	disable('back')
+    	else
+        	enable('back')
+    	end
+	
+	equip(gear.weapons[state.Weapons.current])
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -363,13 +380,6 @@ end
 
 -- Modify the default idle set after it was constructed.
 function customize_idle_set(idleSet)
-    	if state.CP.current == 'on' then
-        	equip(sets.CP)
-        	disable('back')
-    	else
-        	enable('back')
-    	end
-
 	return idleSet
 end
 
