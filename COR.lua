@@ -49,6 +49,9 @@
 function get_sets()
     mote_include_version = 2
     
+    --Player specific global gear
+    include('Mishrahh-Gear.lua')
+
     -- Load and initialize the include file.
     include('Mote-Include.lua')
 end
@@ -57,23 +60,49 @@ end
 function job_setup()
     -- Whether to use Luzaf's Ring
     state.LuzafRing = M(true, "Luzaf's Ring")
+    state.UseCompensator = M(false, "Compensator" )
     -- Whether a warning has been given for low ammo
     state.warned = M(false)
 
     -- QuickDraw Selector
     state.Mainqd = M{['description']='Primary Shot', 'Light Shot', 'Dark Shot', 'Fire Shot', 'Ice Shot', 'Wind Shot', 'Earth Shot', 'Thunder Shot', 'Water Shot'}
-    state.Altqd = M{['description']='Secondary Shot', 'Dark Shot', 'Light Shot', 'Fire Shot', 'Ice Shot', 'Wind Shot', 'Earth Shot', 'Thunder Shot', 'Water Shot'}
+    state.Altqd = M{['description']='Secondary Shot', 'Dark Shot', 'Fire Shot', 'Ice Shot', 'Wind Shot', 'Earth Shot', 'Thunder Shot', 'Water Shot', 'Light Shot'}
     state.UseAltqd = M(false, 'Use Secondary Shot')
     state.SelectqdTarget = M(true, 'Select Quick Draw Target')
     state.Currentqd = M{['description']='Current Quick Draw', 'Main', 'Alt'}
 
     -- Rolls Selector
     state.MainRoll = M{['description']='Main Roll', 'Chaos Roll', 'Choral Roll', 'Companion\'s Roll', 'Corsair\'s Roll', 'Courser\'s Roll', 'Dancer\'s Roll', 'Drachen Roll', 'Evoker\'s Roll', 'Fighter\'s Roll', 'Gallant\'s Roll', 'Healer\'s Roll', 'Hunter\'s Roll', 'Magus\'s Roll', 'Miser\'s Roll', 'Monk\'s Roll', 'Ninja Roll', 'Puppet Roll', 'Rogue\'s Roll', 'Samurai Roll', 'Scholar\'s Roll', 'Tactician\'s Roll', 'Warlock\'s Roll', 'Wizard\'s Roll','Allies\'s Roll', 'Avenger\'s Roll', 'Beast Roll', 'Blitzer\'s Roll', 'Bolter\'s Roll', 'Caster\'s Roll' }
-    state.SecondaryRoll = M{['description']='Secondary Roll', 'Blitzer\'s Roll', 'Bolter\'s Roll', 'Caster\'s Roll', 'Chaos Roll', 'Choral Roll', 'Companion\'s Roll', 'Corsair\'s Roll', 'Courser\'s Roll', 'Dancer\'s Roll', 'Drachen Roll', 'Evoker\'s Roll', 'Fighter\'s Roll', 'Gallant\'s Roll', 'Healer\'s Roll', 'Hunter\'s Roll', 'Magus\'s Roll', 'Miser\'s Roll', 'Monk\'s Roll', 'Ninja Roll', 'Puppet Roll', 'Rogue\'s Roll', 'Samurai Roll', 'Scholar\'s Roll', 'Tactician\'s Roll', 'Warlock\'s Roll', 'Wizard\'s Roll', 'Allies\'s Roll', 'Avenger\'s Roll', 'Beast Roll', }
+    state.SecondaryRoll = M{['description']='Secondary Roll', 'Samurai Roll', 'Scholar\'s Roll', 'Tactician\'s Roll', 'Warlock\'s Roll', 'Wizard\'s Roll', 'Allies\'s Roll', 'Avenger\'s Roll', 'Beast Roll', 'Blitzer\'s Roll', 'Bolter\'s Roll', 'Caster\'s Roll', 'Chaos Roll', 'Choral Roll', 'Companion\'s Roll', 'Corsair\'s Roll', 'Courser\'s Roll', 'Dancer\'s Roll', 'Drachen Roll', 'Evoker\'s Roll', 'Fighter\'s Roll', 'Gallant\'s Roll', 'Healer\'s Roll', 'Hunter\'s Roll', 'Magus\'s Roll', 'Miser\'s Roll', 'Monk\'s Roll', 'Ninja Roll', 'Puppet Roll', 'Rogue\'s Roll', }
     state.TertiaryRoll = M{['description']='Tertiary Roll', 'Corsair\'s Roll', 'Courser\'s Roll', 'Dancer\'s Roll', 'Drachen Roll', 'Evoker\'s Roll', 'Fighter\'s Roll', 'Gallant\'s Roll', 'Healer\'s Roll', 'Hunter\'s Roll', 'Magus\'s Roll', 'Miser\'s Roll', 'Monk\'s Roll', 'Ninja Roll', 'Puppet Roll', 'Rogue\'s Roll', 'Samurai Roll', 'Scholar\'s Roll', 'Tactician\'s Roll', 'Warlock\'s Roll', 'Wizard\'s Roll', 'Allies\'s Roll', 'Avenger\'s Roll', 'Beast Roll', 'Blitzer\'s Roll', 'Bolter\'s Roll', 'Caster\'s Roll', 'Chaos Roll', 'Choral Roll', 'Companion\'s Roll', }
-    state.QuarternaryRoll = M{['description']='Quarternary Roll', 'Samurai Roll', 'Scholar\'s Roll', 'Tactician\'s Roll', 'Warlock\'s Roll', 'Wizard\'s Roll', 'Allies\'s Roll', 'Avenger\'s Roll', 'Beast Roll', 'Blitzer\'s Roll', 'Bolter\'s Roll', 'Caster\'s Roll', 'Chaos Roll', 'Choral Roll', 'Companion\'s Roll', 'Corsair\'s Roll', 'Courser\'s Roll', 'Dancer\'s Roll', 'Drachen Roll', 'Evoker\'s Roll', 'Fighter\'s Roll', 'Gallant\'s Roll', 'Healer\'s Roll', 'Hunter\'s Roll', 'Magus\'s Roll', 'Miser\'s Roll', 'Monk\'s Roll', 'Ninja Roll', 'Puppet Roll', 'Rogue\'s Roll', }
+    state.QuarternaryRoll = M{['description']='Quarternary Roll', 'Blitzer\'s Roll', 'Bolter\'s Roll', 'Caster\'s Roll', 'Chaos Roll', 'Choral Roll', 'Companion\'s Roll', 'Corsair\'s Roll', 'Courser\'s Roll', 'Dancer\'s Roll', 'Drachen Roll', 'Evoker\'s Roll', 'Fighter\'s Roll', 'Gallant\'s Roll', 'Healer\'s Roll', 'Hunter\'s Roll', 'Magus\'s Roll', 'Miser\'s Roll', 'Monk\'s Roll', 'Ninja Roll', 'Puppet Roll', 'Rogue\'s Roll', 'Samurai Roll', 'Scholar\'s Roll', 'Tactician\'s Roll', 'Warlock\'s Roll', 'Wizard\'s Roll', 'Allies\'s Roll', 'Avenger\'s Roll', 'Beast Roll', }
 
     define_roll_values()
+
+    --add in global gear
+    for k,v in pairs(globalgear) do gear[k] = v end
+
+    gear.Artifact = {}
+    gear.Artifact.Head = {}
+    gear.Artifact.Body = "Laksa. Frac +2"
+    gear.Artifact.Hands = {}
+    gear.Artifact.Legs = {}
+    gear.Artifact.Feet = {}
+
+    gear.Relic = {}
+    gear.Relic.Head = "Lanun Tricorne +1"
+    gear.Relic.Body = "Lanun Frac +1"
+    gear.Relic.Hands = "Lanun Gants +1"
+    gear.Relic.Legs = "Lanun Trews +1"
+    gear.Relic.Feet = "Lanun Bottes +2"
+
+    gear.Empyrean = {}
+    gear.Empyrean.Head = {}
+    gear.Empyrean.Body = {}
+    gear.Empyrean.Hands = "Chasseur's Gants +1"
+    gear.Empyrean.Legs = {}
+    gear.Empyrean.Feet = {}
+
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -87,20 +116,40 @@ function user_setup()
     state.WeaponskillMode:options('Normal', 'Acc', 'Att', 'Mod')
     state.CastingMode:options('Normal', 'Resistant')
     state.IdleMode:options('Normal', 'PDT', 'MDT', 'Refresh')
-    state.Gun = M{['description']='Current Gun', 'Anarchy +2', 'Doomsday'}
-    state.CheapAmmo = M{false, "Cheap Ammo"}
     state.CP = M(false, "Capacity Points Mode")
     state.WeaponLock = M(false, 'Weapon Lock')
 
-    gear.RAbullet = "Adlivun Bullet"
-    gear.WSbullet = "Adlivun Bullet"
-    gear.MAbullet = "Bronze Bullet"
-    gear.QDbullet = "Orichalc. Bullet"
-    gear.Cheapbullet = "Bronze Bullet"
+    state.TPBullets = M{['description']='TP Bullet', 'Bronze Bullet', 'Adlivun Bullet'}
+    state.WSBullets = M{['description']='WS Bullet', 'Adlivun Bullet'}
+    state.MWSBullets = M{['description']='MWS Bullet', 'Orichalc. Bullet'}
+    state.QDBullets = M{['description']='QD Bullet', 'Animikii Bullet', 'Orichalc. Bullet'}
     options.ammo_warning_limit = 10
 
-    gear.TPCape = { name="Camulus's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+3','"Dual Wield"+10',}};
-    gear.RngMagicWSCape = { name="Camulus's Mantle", augments={'AGI+20','Mag. Acc+20 /Mag. Dmg.+20','Weapon skill damage +10%',}};
+    gear.capes = {}
+    gear.capes.MeleeTPCapeDW = { name="Camulus's Mantle", augments={'DEX+20','Accuracy+20 Attack+20','Accuracy+3','"Dual Wield"+10',}}
+    gear.capes.MeleeTPCapeDA = gear.capes.MeleeTPCapeDW   --also evisceration
+    gear.capes.MeleeWSCape = { name="Camulus's Mantle", augments={'STR+20','Accuracy+20 Attack+20','Weapon skill damage +10%',}}
+    gear.capes.PhantomRoll = gear.capes.MeleeTPCapeDW
+    gear.capes.RngLeadenCape = { name="Camulus's Mantle", augments={'AGI+20','Mag. Acc+20 /Mag. Dmg.+20','Weapon skill damage +10%',}}
+    gear.capes.RngTPCape = gear.capes.RngLeadenCape
+    gear.capes.RngWFCape = gear.capes.RngLeadenCape
+    gear.capes.QDTPCape = gear.capes.RngLeadenCape
+    gear.capes.FastCast = {}
+    gear.capes.RngCrit = {}
+
+    state.Weapons = M{['description'] = 'Weapon Setup', 'Savage', 'Doomsday' }
+    gear.weapons = {}
+    --match key to state.weapons options
+    gear.weapons['Savage'] = {
+        main="Hep. Sapara +1",
+        sub="Blurred Knife +1",
+        ranged="Anarchy +2",
+    }
+    gear.weapons['Doomsday'] = {
+        main="Hepatizon Rapier",
+        sub="Kaja Knife",
+        ranged="Doomsday",
+    }
 
     -- Additional local binds
 --[[
@@ -118,17 +167,24 @@ function user_setup()
     send_command('bind ^[ gs c toggle selectqdtarget')
     send_command('bind ^] gs c toggle usealtqd')
 
-    send_command('bind @g gs c cycle Gun')
-    send_command('bind @h gs c toggle WeaponLock')
-    send_command('bind @q gs c qd')
+    send_command('bind ^g gs c cycle Weapons')
+    send_command('bind ^l gs c toggle WeaponLock')
+    send_command('bind ^q gs c qd')
+    send_command('bind !q gs c qd alt')
     send_command('bind @c gs c toggle CP')
     send_command('bind @l gs c toggle LuzafRing')
     send_command('bind @2 gs c cycle MainRoll')
+    send_command('bind #2 gs c cycleback MainRoll')
     send_command('bind @3 gs c cycle SecondaryRoll')
+    send_command('bind #3 gs c cycleback SecondaryRoll')
     send_command('bind @4 gs c cycle TertiaryRoll')
+    send_command('bind #4 gs c cycleback TertiaryRoll')
     send_command('bind @5 gs c cycle QuarternaryRoll')
+    send_command('bind #5 gs c cycleback QuarternaryRoll')
 
     select_default_macro_book()
+
+    send_command('wait 10; input /lockstyle on')
 end
 
 
@@ -141,15 +197,20 @@ function user_unload()
     send_command('unbind ^[')
     send_command('unbind ^]')
 
-    send_command('unbind @g')
-    send_command('unbind @h')
+    send_command('unbind ^g')
+    send_command('unbind ^l')
     send_command('unbind @c')
     send_command('unbind @l')
-    send_command('unbind @q')
+    send_command('unbind ^q')
+    send_command('unbind ^!')
     send_command('unbind @2')
+    send_command('unbind #2')
     send_command('unbind @3')
+    send_command('unbind #3')
     send_command('unbind @4')
+    send_command('unbind #4')
     send_command('unbind @5')
+    send_command('unbind #5')
 end
 
 -- Define sets and vars used by this job file.
@@ -163,17 +224,17 @@ function init_gear_sets()
     -- Precast sets to enhance JAs
     
     --sets.precast.JA['Triple Shot'] = {body="Navarch's Frac +2"}
-    sets.precast.JA['Snake Eye'] = {legs="Lanun Trews"}
-    sets.precast.JA['Wild Card'] = {feet="Lanun Bottes +1"}
-    sets.precast.JA['Random Deal'] = {body="Lanun Frac"}
+    sets.precast.JA['Snake Eye'] = {legs=gear.Relic.Legs}
+    sets.precast.JA['Wild Card'] = {feet=gear.Relic.Feet}
+    sets.precast.JA['Random Deal'] = {body=gear.Relic.Body}
 
     
     sets.precast.CorsairRoll = {
-        head="Lanun Tricorne",
-        hands="Chasseur's Gants +1",
+        head=gear.Relic.Head,
+        hands=gear.Empyrean.Hands,
         legs="Desultor Tassets",
         ring1="Barataria Ring",
-        back=gear.TPCape,
+        back=gear.capes.PhantomRoll,
     }
     
     --sets.precast.CorsairRoll["Caster's Roll"] = set_combine(sets.precast.CorsairRoll, {legs="Navarch's Culottes +2"})
@@ -183,10 +244,8 @@ function init_gear_sets()
     --sets.precast.CorsairRoll["Allies' Roll"] = set_combine(sets.precast.CorsairRoll, {hands="Navarch's Gants +2"})
     
     sets.precast.LuzafRing = set_combine( sets.precast.CorsairRoll, {ring2="Luzaf's Ring"})
-    --sets.precast.FoldDoubleBust = {hands="Lanun Gants"}
-    
-    --sets.precast.CorsairShot = {head="Blood Mask"}
-    
+    sets.precast.FoldDoubleBust = {hands=gear.Relic.Hands}    
+    sets.precast.Compensator = { ranged = "Compensator" } 
 
     -- Waltz set (chr and vit)
     sets.precast.Waltz = {
@@ -208,32 +267,32 @@ function init_gear_sets()
 
 
     sets.precast.RA = {
-        ammo=gear.RAbullet,
+        --ammo=gear.RAbullet,
         --head="Navarch's Tricorne +2",
-        --body="Laksamana's Frac",
+        body=gear.Artifact.Body,
         hands="Carmine Fin. Ga. +1",
         back="Navarch's Mantle",
         waist="Impulse Belt",
         --legs="Nahtirah Trousers",
-        feet="Meg. Jam. +1"
+        feet=gear.Meghanada.Feet
     }
 
        
     -- Weaponskill sets
     -- Default set for any weaponskill that isn't any more specifically defined
     sets.precast.WS = {
-        head="Meghanada Vist +1",
+        head="Lilitu Headpiece",
         --neck="Fotia Gorget",
         ear1="Btutal Earring",
         ear2="Moonshade Earring",
-        body="Meg. Cuirie +2",
-        hands="Meg. Gloves +2",
-        legs="Meg. Chausses +1",
-        feet="Meg. Jam. +1",
+        body=gear.Artifact.Body,
+        hands=gear.Meghanada.Hands,
+        legs="Herculean Trousers",
+        feet=gear.Relic.Feet,
         ring1="Epona's Ring",
         ring2="Rajas Ring",
-        back="Buquwik Cape",
-        waist="Dynamic Belt"
+        back=gear.capes.MeleeWSCape,
+        waist="Prosilio Belt +1"
     }
 
     -- Specific weaponskill sets.  Uses the base set if an appropriate WSMod version isn't found.
@@ -250,63 +309,64 @@ function init_gear_sets()
     })
 
     sets.precast.WS['Evisceration'] = set_combine( sets.precast.WS, {
-        head="Mummu Bonnet +1",
-        body="Mummu Jacket +1",
-        hands="Mummu Wrists +1",
-        legs="Mummu Kecks +1",
-        feet="Mummu Gamash. +1",
+        head=gear.Mummu.Head,
+        body=gear.Mummu.Body,
+        hands=gear.Mummu.Hands,
+        legs=gear.Mummu.Legs,
+        feet=gear.Mummu.Feet,
         neck="Fotia Gorget"
     })
 
     sets.precast.WS['Aeolian Edge'] = set_combine(sets.precast.WS, {
-        ammo=gear.QDbullet,
+        --ammo=gear.QDbullet,
         --head="Wayfarer Circlet",
         neck="Stoicheion Medal",
         ear1="Friomisi Earring",
         ear2="Moonshade Earring",
-        body="Rawhide Vest",
+        body="Samnuha Coat",
         hands="Carmine Fin. Ga. +1",
         --ring1="Stormsoul Ring",
         --ring2="Demon's Ring",
-        back=gear.RngMagicWSCape,
+        back=gear.capes.RngLeadenCape,
         waist="Aquiline Belt",
-        legs="Iuitl Tights +1",
-        feet="Lanun Bottes +1"
+        legs="Herculean Trousers",
+        feet=gear.Relic.Feet
     })
 
     sets.precast.WS['Leaden Salute'] = {
-        ammo=gear.QDbullet,
-        --head="Wayfarer Circlet",
+        --ammo=gear.QDbullet,
+        head="Pixie Hairpin +1",
         neck="Stoicheion Medal",
         ear1="Friomisi Earring",
         ear2="Moonshade Earring",
-        body="Rawhide Vest",
+        body="Samnuha Coat",
         hands="Carmine Fin. Ga. +1",
         --ring1="Stormsoul Ring",
         --ring2="Demon's Ring",
-        back=gear.RngMagicWSCape,
+        back=gear.capes.RngLeadenCape,
         waist="Aquiline Belt",
-        legs="Iuitl Tights +1",
-        feet="Lanun Bottes +1"
+        legs="Herculean Trousers",
+        feet=gear.Relic.Feet
     }
 
     sets.precast.WS['Wildfire'] = set_combine( sets.precast.WS['Leaden Salute'], {
+        head=gear.Mummu.Head,
         ear2="Hecate's Earring"
     })
 
     sets.precast.WS['Last Stand'] = {
-        ammo=gear.WSbullet,
-        head="Meghanada Vist +1",
+        --ammo=gear.WSbullet,
+        head="Lilitu Headpiece",
         neck="Fotia Gorget",
         ear1="Volley Earring",
         ear2="Moonshade Earring",
-        body="Meg. Cuirie +2",
-        hands="Meg. Gloves +2",
-        legs="Meg. Chausses +1",
-        feet="Meg. Jam. +1"
+        body=gear.Meghanada.Body,
+        hands=gear.Meghanada.Hands,
+        legs="Herculean Trousers",
+        feet=gear.Relic.Feet,
         --ring1="Rajas Ring",
         --ring2="Stormsoul Ring",
-        --back="Terebellum Mantle",
+        back=gear.capes.RngWFCape,
         --waist=gear.ElementalBelt
     }
 
@@ -326,18 +386,18 @@ function init_gear_sets()
     sets.midcast.Utsusemi = sets.midcast.FastRecast
 
     sets.midcast.CorsairShot = {
-        ammo=gear.QDbullet,
+        --ammo=gear.QDbullet,
         --head="Blood Mask",
-        body="Rawhide Vest",
+        body="Samnuha Coat",
         hands="Carmine Fin. Ga. +1",
         legs="Iuitl Tights +1",
-        feet="Lanun Bottes +1",
+        feet=gear.Relic.Feet,
         neck="Stoicheion Medal",
         ear1="Friomisi Earring",
         ear2="Hecate's Earring",
         --ring1="Hajduk Ring",
         --ring2="Demon's Ring",
-        back=gear.RngMagicWSCape,
+        back=gear.capes.RngLeadenCape,
         waist="Aquiline Belt"
     }
 
@@ -346,12 +406,14 @@ function init_gear_sets()
     })
 
     sets.midcast.CorsairShot['Light Shot'] = set_combine( sets.midcast.CorsairShot,{
-        ammo=gear.MAbullet,
-        head="Mummu Bonnet +1",
-        body="Mummu Jacket +1",
-        hands="Mummu Wrists +1",
-        legs="Mummu Kecks +1",
-        feet="Mummu Gamash. +1",
+        --ammo=gear.MAbullet,
+        head=gear.Mummu.Head,
+        body=gear.Mummu.Body,
+        hands=gear.Mummu.Hands,
+        legs=gear.Mummu.Legs,
+        feet=gear.Mummu.Feet,
+        neck="Sanctity Necklace",
+        back=gear.capes.QDTPCape
     })
 
     sets.midcast.CorsairShot['Dark Shot'] = sets.midcast.CorsairShot['Light Shot']
@@ -359,17 +421,17 @@ function init_gear_sets()
 
     -- Ranged gear
     sets.midcast.RA = {
-        head="Meghanada Visor +1",
+        head=gear.Meghanada.Head,
         --neck="Ocachi Gorget",
         ear1="Volley Earring",
         ear2="Clearview Earring",
-        body="Mummu Jacket +1",
-        hands="Meg. Gloves +2",
+        body=gear.Mummu.Body,
+        hands=gear.Meghanada.Hands,
         ring1="Longshot Ring",
         ring2="Merman's Ring",
-        back=gear.RngMagicWSCape,
-        waist="Aquiline Belt",
-        legs="Meg. Chausses +1",
+        back=gear.capes.RngLeadenCape,
+        waist="Yemaya Belt",
+        legs=gear.Meghanada.Legs,
         feet="Herculean Boots"
     }
 
@@ -385,18 +447,18 @@ function init_gear_sets()
 
     -- Idle sets
     sets.idle = {
-        head="Lanun Tricorne",
-        body="Meg. Cuirie +2",
-        hands="Meg. Gloves +2",
+        head=gear.Relic.Head,
+        body=gear.Meghanada.Body,
+        hands=gear.Meghanada.Hands,
         legs="Crimson Cuisses",
-        feet="Meg. Jam. +1",
+        feet=gear.Relic.Feet,
         neck="Sanctity Necklace",
         waist="Dynamic Belt",
         ear1="Dudgeon Earring",
         ear2="Heartseeker Earring",
         ring1="Epona's Ring",
         ring2="Rajas Ring",
-        back=gear.TPCape,
+        back=gear.capes.PhantomRoll,
     }
 
     sets.idle.Town = set_combine( sets.idle, {
@@ -445,18 +507,18 @@ function init_gear_sets()
     
     -- Normal melee group
     sets.engaged.Melee = {
-        head="Meghanada Visor +1",
+        head=gear.Meghanada.Head,
         body="Rawhide Vest",
-        hands="Meg. Gloves +2",
-        legs="Meg. Chausses +1",
-        feet="Meg. Jam. +1",
+        hands="Adhemar Wrist. +1",
+        legs="Samnuha Tights",
+        feet=gear.Meghanada.Feet,
         neck="Sanctity Necklace",
         waist="Dynamic Belt",
         left_ear="Steelflash Earring",
         right_ear="Bladeborn Earring",
         left_ring="Epona's Ring",
         right_ring="Rajas Ring",
-        back=gear.TPCape,
+        back=gear.capes.MeleeTPCapeDW,
     }
     
     sets.engaged.Acc = set_combine( sets.engaged.Melee, {
@@ -472,8 +534,6 @@ function init_gear_sets()
 
     sets.engaged.Ranged = set_combine( sets.engaged.Melee, {
     })
-
-    sets.CP = {back="Aptitude Mantle +1"}
 end
 
 -------------------------------------------------------------------------------------------------------------------
@@ -483,10 +543,6 @@ end
 -- Set eventArgs.handled to true if we don't want any automatic gear equipping to be done.
 -- Set eventArgs.useMidcastGear to true if we want midcast gear equipped on precast.
 function job_precast(spell, action, spellMap, eventArgs)
-    if spell.action_type == 'Ranged Attack' and state.CheapAmmo.value == true then
-        equip({ammo = Cheapbullet})
-    end
-
     -- Check that proper ammo is available if we're using ranged attacks or similar.
     if spell.action_type == 'Ranged Attack' or spell.type == 'WeaponSkill' or spell.type == 'CorsairShot' then
         do_bullet_checks(spell, spellMap, eventArgs)
@@ -495,6 +551,9 @@ function job_precast(spell, action, spellMap, eventArgs)
     -- gear sets
     if (spell.type == 'CorsairRoll' or spell.english == "Double-Up") and state.LuzafRing.value then
         equip(sets.precast.LuzafRing)
+        if( state.UseCompensator.value ) then
+            equip( sets.precast.Compensator )
+        end
     elseif spell.type == 'CorsairShot' and state.CastingMode.value == 'Resistant' then
         classes.CustomClass = 'Acc'
     elseif spell.english == 'Fold' and buffactive['Bust'] == 2 then
@@ -551,32 +610,37 @@ end
 
 -- Handle notifications of general user state change.
 function job_state_change(stateField, newValue, oldValue)
-    if state.WeaponLock.value == true then
+    if state.WeaponLock.current == 'on' then
+        disable('main')
+        disable('sub')
         disable('ranged')
     else
+        enable('main')
+        enable('sub')
         enable('ranged')
-    end
-end
-
--- Modify the default idle set after it was constructed.
-function customize_idle_set(idleSet)
-    if state.Gun.current == 'Doomsday' then
-        equip({ranged="Doomsday"})
-    elseif state.Gun.current == 'Fomalhaut' then
-        equip({ranged="Fomalhaut"})
-    elseif state.Gun.current == 'Anarchy +2' then
-        equip({ranged="Anarchy +2"})
---    elseif state.Gun.current == 'Armageddon' then
---        equip({ranged="Armageddon"})
     end
 
     if state.CP.current == 'on' then
-        equip(sets.CP)
+        equip(gear.CP)
         disable('back')
     else
         enable('back')
     end
 
+    if stateField == 'Main Roll' or
+       stateField == 'Secondary Roll' or
+       stateField == 'Tertiary Roll' or
+       stateField == 'Quarternary Roll'
+    then
+        add_to_chat( 5, "[" .. stateField .. "] " .. newValue .. " provides " .. rolls[newValue].bonus )
+    end
+
+    equip(gear.weapons[state.Weapons.current])
+    
+end
+
+-- Modify the default idle set after it was constructed.
+function customize_idle_set(idleSet)
     return idleSet
 end
 
@@ -587,7 +651,6 @@ function display_current_job_state(eventArgs)
     msg = msg .. 'Off.: '..state.OffenseMode.current
     msg = msg .. ', Rng.: '..state.RangedMode.current
     msg = msg .. ', WS.: '..state.WeaponskillMode.current
-    msg = msg .. ', QD.: '..state.CastingMode.current
 
     if state.DefenseMode.value ~= 'None' then
         local defMode = state[state.DefenseMode.value ..'DefenseMode'].current
@@ -611,10 +674,10 @@ function display_current_job_state(eventArgs)
     add_to_chat(122, msg)
 
     msg = ''
-    msg = msg .. 'R1: ' .. state.MainRoll.current
-    msg = msg .. ', R2: ' .. state.SecondaryRoll.current
-    msg = msg .. ', R3: ' .. state.TertiaryRoll.current
-    msg = msg .. ', R4: ' .. state.QuarternaryRoll.current
+    msg = msg .. 'Alt2: ' .. state.MainRoll.current .. " [".. rolls[state.MainRoll.current].bonus .."]"
+    msg = msg .. ', Alt3: ' .. state.SecondaryRoll.current .. " [".. rolls[state.SecondaryRoll.current].bonus .."]"
+    msg = msg .. ', Alt4: ' .. state.TertiaryRoll.current .. " [".. rolls[state.TertiaryRoll.current].bonus .."]"
+    msg = msg .. ', Alt5: ' .. state.QuarternaryRoll.current .. " [".. rolls[state.QuarternaryRoll.current].bonus .."]"
 
     add_to_chat(122, msg)
 
@@ -625,7 +688,8 @@ function job_self_command(cmdParams, eventArgs)
     if cmdParams[1] == 'qd' then
 
         local doqd = ''
-        if state.UseAltqd.value == true then
+        local usealt = cmdParams[2] or ''
+        if state.UseAltqd.value == true or 'alt' == usealt then
             doqd = state.Altqd.current
         else
             doqd = state.Mainqd.current
@@ -713,30 +777,30 @@ function do_bullet_checks(spell, spellMap, eventArgs)
     local bullet_name
     local bullet_min_count = 1
     
-    bullet_name = player.equipment.ammo
-
     if spell.type == 'WeaponSkill' then
         if spell.skill == "Marksmanship" then
             if spell.element == 'None' then
                 -- physical weaponskills
-                bullet_name = gear.WSbullet
+                bullet_name = state.WSBullets.current
             else
                 -- magical weaponskills
-                bullet_name = gear.MAbullet
+                bullet_name = state.MWSBullets.current
             end
         else
             -- Ignore non-ranged weaponskills
             return
         end
     elseif spell.type == 'CorsairShot' then
-        bullet_name = gear.QDbullet
+        bullet_name = state.QDBullets.current
     elseif spell.action_type == 'Ranged Attack' then
-        bullet_name = gear.RAbullet
+        bullet_name = state.TPBullets.current
         if buffactive['Triple Shot'] then
             bullet_min_count = 3
         end
     end
     
+    equip({ammo=bullet_name})
+
     local available_bullets = player.inventory[bullet_name] or player.wardrobe[bullet_name]
     
     -- If no ammo is available, give appropriate warning and end.
@@ -744,7 +808,7 @@ function do_bullet_checks(spell, spellMap, eventArgs)
         if spell.type == 'CorsairShot' and player.equipment.ammo ~= 'empty' then
             add_to_chat(104, 'No Quick Draw ammo left.  Using what\'s currently equipped ('..player.equipment.ammo..').')
             return
-        elseif spell.type == 'WeaponSkill' and player.equipment.ammo == gear.RAbullet then
+        elseif spell.type == 'WeaponSkill' and player.equipment.ammo == state.TPBullets.current then
             add_to_chat(104, 'No weaponskill ammo left.  Using what\'s currently equipped (standard ranged bullets: '..player.equipment.ammo..').')
             return
         else
@@ -755,7 +819,7 @@ function do_bullet_checks(spell, spellMap, eventArgs)
     end
     
     -- Don't allow shooting or weaponskilling with ammo reserved for quick draw.
-    if spell.type ~= 'CorsairShot' and bullet_name == gear.QDbullet and available_bullets.count <= bullet_min_count then
+    if spell.type ~= 'CorsairShot' and bullet_name == state.QDBullets.current and available_bullets.count <= bullet_min_count then
         add_to_chat(104, 'No ammo will be left for Quick Draw.  Cancelling.')
         eventArgs.cancel = true
         return
